@@ -4,14 +4,36 @@ import com.rest.example.model.Author;
 import com.rest.example.model.Book;
 import com.rest.example.services.AuthorService;
 import com.rest.example.services.BookService;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 public class AppTest
 {
     private static BookService bookService;
     private static AuthorService authorService;
+
+    @DataProvider(name = "booksCount")
+    public static Object[][] booksCount() {
+        return new Object[][] {
+            { 1, false },
+            { 2, false },
+            {200, true},
+            {1000, false},
+            {-1, false}
+        };
+    }
+
+    @DataProvider(name = "authorsCount")
+    public static Object[][] authorsCount() {
+        return new Object[][] {
+                { 1, false },
+                { 2, false },
+                {1000, false},
+                {-1, false}
+        };
+    }
 
     @BeforeClass
     public static void init(){
@@ -19,18 +41,19 @@ public class AppTest
         authorService = new AuthorService();
     }
 
-    @Test
-    public void validateBooksCount()
+    @Test(dataProvider = "booksCount")
+    public void validateBooksCount(int count, boolean flag)
     {
         Book[] books = bookService.getAllBooks();
-        Assert.assertEquals(200, books.length);
+        Assert.assertEquals(books.length==count, flag);
     }
 
-    @Test
-    public void validateAuthorsCount()
+
+    @Test(dataProvider = "authorsCount")
+    public void validateAuthorsCount(int count, boolean flag)
     {
         Author[] authors = authorService.getAllAuthors();
-        Assert.assertEquals(200, authors.length);
+        Assert.assertEquals(authors.length==count, flag);
     }
 
     @Test
@@ -44,6 +67,7 @@ public class AppTest
         newBook.setTitle("test title");
         newBook.setDescription("test desc");
         newBook.setExcerpt("test exc");
-        bookService.postNewBook(newBook);
+        assert bookService.postNewBook(newBook).statusCode()==200;
+
     }
 }

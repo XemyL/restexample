@@ -1,0 +1,1 @@
+Feature: Cover Photos feature
