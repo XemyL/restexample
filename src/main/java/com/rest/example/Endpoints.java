@@ -8,4 +8,7 @@ public interface Endpoints {
 
     String ALL_BOOKS = "/Books";
     String BOOK_BY_ID = "/Books/{id}";
+
+    String ALL_COVER_PHOTOS = "/CoverPhotos";
+    String COVER_PHOTO_BY_ID = "/CoverPhotos/{id}";
 }
